@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # Read the file and extract the value of 'location'
+cd ..
+make clean all
+cd bin
+
 drugname=$(grep 'Drug_Name ' ./input_deck.txt | awk -F'= ' '{print $2}')
 concentration=$(grep 'Concentrations ' ./input_deck.txt | awk -F'= ' '{print $2}')
 formatted_concentration=$(printf "%.2f" "$concentration")
