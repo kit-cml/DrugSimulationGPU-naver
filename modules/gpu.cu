@@ -153,6 +153,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
     tmax = pace_max * bcl;
     int pace_count = 0;
+    if(sample_id == 1) printf("tmax : %lf\n",tmax);
     
   
    // printf("%d,%lf,%lf,%lf,%lf\n", sample_id, dt[sample_id], tcurr[sample_id], d_STATES[V + (sample_id * num_of_states)],d_RATES[V + (sample_id * num_of_rates)]);
@@ -160,22 +161,20 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
     while (tcurr[sample_id]<tmax)
     {
+        if(sample_id == 1) printf("tmax : %lf tcurr: %lf \n",tmax, tcurr[sample_id]);
         computeRates(tcurr[sample_id], d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
-        if(sample_id == 1) printf("%d \n",pace_count);
-        dt_set = set_time_step( tcurr[sample_id], time_point, max_time_step, 
-        d_CONSTANTS, 
-        d_RATES, 
-        d_STATES, 
-        d_ALGEBRAIC, 
-        sample_id); 
+        // if(sample_id == 1) printf("%d \n",pace_count);
+        dt_set = set_time_step( tcurr[sample_id], time_point, max_time_step, d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
         
-         //printf("tcurr at core %d: %lf\n",sample_id,tcurr[sample_id]);
+        //  printf("tcurr at core %d: %lf\n",sample_id,tcurr[sample_id]);
+        if(sample_id == 1) printf("if %d == %d\n",floor((tcurr[sample_id] + dt_set) / bcl), floor(tcurr[sample_id] / bcl));
         if (floor((tcurr[sample_id] + dt_set) / bcl) == floor(tcurr[sample_id] / bcl)) { 
           dt[sample_id] = dt_set;
-          //printf("dt : %lf\n",dt_set);
+          if(sample_id == 1) printf("dt : %lf\n",dt_set);
           // it goes in here, but it does not, you know, adds the pace, 
         }
         else{
+          if(sample_id == 1) printf("Else...\n");
           dt[sample_id] = (floor(tcurr[sample_id] / bcl) + 1) * bcl - tcurr[sample_id];
 
           // new part starts
@@ -203,6 +202,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
             temp_result[sample_id].ical_auc = ical_auc;
             temp_result[sample_id].vm_dia = d_STATES[(sample_id * num_of_states) +V];
             temp_result[sample_id].ca_dia = d_STATES[(sample_id * num_of_states) +cai];
+            printf("cad50 updated:  %lf\n",temp_result[sample_id].cad50);
 
             // fprintf(fp_vmdebug, "%hu,%.2lf,%.2lf,%.2lf,%.2lf,%.2lf,%.2lf\n", pace_count,t_peak_capture,temp_result.vm_peak,vm_repol30,vm_repol50,vm_repol90,temp_result.dvmdt_repol);
             // replace result with steeper repolarization AP or first pace from the last 250 paces
@@ -212,7 +212,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
             //   }
             if( temp_result[sample_id].dvmdt_repol > cipa_result[sample_id].dvmdt_repol ) {
               pace_steepest = pace_count;
-              // printf("Steepest pace updated: %d dvmdt_repol: %lf\n",pace_steepest,temp_result[sample_id].dvmdt_repol);
+              printf("Steepest pace updated: %d dvmdt_repol: %lf\n",pace_steepest,temp_result[sample_id].dvmdt_repol);
 
               // cipa_result = temp_result;
               cipa_result[sample_id].qnet = temp_result[sample_id].qnet;
@@ -445,7 +445,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
 		    } // end the last 250 pace operations
         tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
-        //printf("t after addition: %lf\n", tcurr[sample_id]);
+       if(sample_id == 1) printf("t after addition: %lf\n", tcurr[sample_id]);
        
     } // while loop ends here 
     // __syncthreads();
