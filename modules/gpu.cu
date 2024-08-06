@@ -144,7 +144,6 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
     // printf("Core %d:\n",sample_id);
     initConsts(d_CONSTANTS, d_STATES, type, conc, d_ic50, d_cvar, p_param->is_dutta, p_param->is_cvar, bcl, sample_id);
     
-
     applyDrugEffect(d_CONSTANTS, conc, d_ic50, epsilon, sample_id);
 
     d_CONSTANTS[BCL + (sample_id * num_of_constants)] = bcl;
@@ -154,16 +153,13 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
     tmax = pace_max * bcl;
     int pace_count = 0;
     if(sample_id == 1) printf("tmax : %lf\n",tmax);
-    
-  
-   // printf("%d,%lf,%lf,%lf,%lf\n", sample_id, dt[sample_id], tcurr[sample_id], d_STATES[V + (sample_id * num_of_states)],d_RATES[V + (sample_id * num_of_rates)]);
-   // printf("%lf,%lf,%lf,%lf,%lf\n", d_ic50[0 + (14*sample_id)], d_ic50[1+ (14*sample_id)], d_ic50[2+ (14*sample_id)], d_ic50[3+ (14*sample_id)], d_ic50[4+ (14*sample_id)]);
 
-    while (tcurr[sample_id]<tmax)
+    while (int(tcurr[sample_id])<int(tmax))
     {
         if(sample_id == 1) printf("tmax : %lf tcurr: %lf \n",tmax, tcurr[sample_id]);
+        if(sample_id == 1) printf("%lf,%lf,%lf,%lf\n", dt[sample_id], tcurr[sample_id], d_STATES[V + (sample_id * num_of_states)],d_RATES[V + (sample_id * num_of_rates)]);
         computeRates(tcurr[sample_id], d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
-        // if(sample_id == 1) printf("%d \n",pace_count);
+        if(sample_id == 1) printf("%d \n",pace_count);
         dt_set = set_time_step( tcurr[sample_id], time_point, max_time_step, d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
         
         //  printf("tcurr at core %d: %lf\n",sample_id,tcurr[sample_id]);
@@ -175,26 +171,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
         }
         else{
           if(sample_id == 1) printf("Else...\n");
-          dt[sample_id] = (floor(tcurr[sample_id] / bcl) + 1) * bcl - tcurr[sample_id];
-
-          // new part starts
-          /// only available in single mode!
-        //   if( is_eligible_AP && pace_count >= pace_max-last_drug_check_pace) {
-        //     for(std::multimap<double, double>::iterator itrmap = temp_result[sample_id].cai_data.begin(); 
-        //     itrmap != temp_result[sample_id].cai_data.end() ; itrmap++ ){
-        //   // before the peak calcium
-        //   if( itrmap->first < t_ca_peak ){
-        //     if( itrmap->second < ca_amp50 ) cad50_prev = itrmap->first;
-        //     if( itrmap->second < ca_amp90 ) cad90_prev = itrmap->first;
-        //   }
-        //   // after the peak calcium
-        //   else{
-        //     if( itrmap->second > ca_amp50 ) cad50_curr = itrmap->first;
-        //     if( itrmap->second > ca_amp90 ) cad90_curr = itrmap->first;
-        //   }
-        // }
-
-
+            dt[sample_id] = (floor(tcurr[sample_id] / bcl) + 1) * bcl - tcurr[sample_id];
             temp_result[sample_id].cad50 = cad50_curr - cad50_prev;
             temp_result[sample_id].cad90 = cad90_curr - cad90_prev;
             temp_result[sample_id].qnet = inet/1000.0;
@@ -280,37 +257,17 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
         }
         
 
-        //// progress bar starts ////
-
-        // if(sample_id==0 && pace_count%10==0 && pace_count>99 && !writen){
-        // // printf("Calculating... watching core 0: %.2lf %% done\n",(tcurr[sample_id]/tmax)*100.0);
-        // printf("[");
-        // for (cnt=0; cnt<pace_count/10;cnt++){
-        //   printf("=");
-        // }
-        // for (cnt=pace_count/10; cnt<pace_max/10;cnt++){
-        //   printf("_");
-        // }
-        // printf("] %.2lf %% \n",(tcurr[sample_id]/tmax)*100.0);
-        // //mvaddch(0,pace_count,'=');
-        // //refresh();
-        // //system("clear");
-        // writen = true;
-        // }
-
-        // //// progress bar ends ////
-
         solveAnalytical(d_CONSTANTS, d_STATES, d_ALGEBRAIC, d_RATES,  dt[sample_id], sample_id);
         // tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
         // __syncthreads();
-        // printf("solved analytical\n"); 
+        if(sample_id == 1) printf("solved analytical\n"); 
         // it goes here, so it means, basically, floor((tcurr[sample_id] + dt_set) / bcl) == floor(tcurr[sample_id] / bcl) is always true
 
         // begin the last 250 pace operations
-
+        if(sample_id == 1) printf("paces: %d from %d\n\n", pace_count,last_drug_check_pace);
         if (pace_count >= pace_max-last_drug_check_pace)
         {
-          // printf("last 250 ops, pace: %d\n", pace_count);
+          printf("last 250 ops, pace: %d\n", pace_count);
 			    // Find peak vm around 2 msecs and  40 msecs after stimulation
 			    // and when the sodium current reach 0
           // new codes start here
@@ -445,8 +402,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
 		    } // end the last 250 pace operations
         tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
-       if(sample_id == 1) printf("t after addition: %lf\n", tcurr[sample_id]);
-       
+       if(sample_id == 1) printf("t after addition: %lf\n\n", tcurr[sample_id]);
     } // while loop ends here 
     // __syncthreads();
 }

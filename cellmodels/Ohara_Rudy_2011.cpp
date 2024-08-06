@@ -748,6 +748,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + km2n] =  STATES[(offset * num_of_states)
 ALGEBRAIC[(offset * num_of_algebraic) + anca] = 1.00000/(CONSTANTS[(offset * num_of_constants) + k2n]/ALGEBRAIC[(offset * num_of_algebraic) + km2n]+pow(1.00000+CONSTANTS[(offset * num_of_constants) + Kmn]/STATES[(offset * num_of_states) + cass], 4.00000));
 ALGEBRAIC[(offset * num_of_algebraic) + xrss] = 1.00000/(1.00000+exp(- (STATES[(offset * num_of_states) + V]+8.33700)/6.78900));
 ALGEBRAIC[(offset * num_of_algebraic) + txrf] = 12.9800+1.00000/( 0.365200*exp((STATES[(offset * num_of_states) + V] - 31.6600)/3.86900)+ 4.12300e-05*exp(- (STATES[(offset * num_of_states) + V] - 47.7800)/20.3800));
+
 ALGEBRAIC[(offset * num_of_algebraic) + txrs] = 1.86500+1.00000/( 0.0662900*exp((STATES[(offset * num_of_states) + V] - 34.7000)/7.35500)+ 1.12800e-05*exp(- (STATES[(offset * num_of_states) + V] - 29.7400)/25.9400));
 ALGEBRAIC[(offset * num_of_algebraic) + xs1ss] = 1.00000/(1.00000+exp(- (STATES[(offset * num_of_states) + V]+11.6000)/8.93200));
 ALGEBRAIC[(offset * num_of_algebraic) + txs1] = 817.300+1.00000/( 0.000232600*exp((STATES[(offset * num_of_states) + V]+48.2800)/17.8000)+ 0.00129200*exp(- (STATES[(offset * num_of_states) + V]+210.000)/230.000));
@@ -795,6 +796,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + Jrel_inf] = (CONSTANTS[(offset * num_of_
 ALGEBRAIC[(offset * num_of_algebraic) + tau_rel_temp] = CONSTANTS[(offset * num_of_constants) + bt]/(1.00000+0.0123000/STATES[(offset * num_of_states) + cajsr]);
 ALGEBRAIC[(offset * num_of_algebraic) + tau_rel] = (ALGEBRAIC[(offset * num_of_algebraic) + tau_rel_temp]<0.00100000 ? 0.00100000 : ALGEBRAIC[(offset * num_of_algebraic) + tau_rel_temp]);
 ALGEBRAIC[(offset * num_of_algebraic) + Jrel_temp] = ( CONSTANTS[(offset * num_of_constants) + a_relp]*- ALGEBRAIC[(offset * num_of_algebraic) + ICaL])/(1.00000+pow(1.50000/STATES[(offset * num_of_states) + cajsr], 8.00000));
+
 ALGEBRAIC[(offset * num_of_algebraic) + Jrel_infp] = (CONSTANTS[(offset * num_of_constants) + celltype]==2.00000 ?  ALGEBRAIC[(offset * num_of_algebraic) + Jrel_temp]*1.70000 : ALGEBRAIC[(offset * num_of_algebraic) + Jrel_temp]);
 ALGEBRAIC[(offset * num_of_algebraic) + tau_relp_temp] = CONSTANTS[(offset * num_of_constants) + btp]/(1.00000+0.0123000/STATES[(offset * num_of_states) + cajsr]);
 ALGEBRAIC[(offset * num_of_algebraic) + tau_relp] = (ALGEBRAIC[(offset * num_of_algebraic) + tau_relp_temp]<0.00100000 ? 0.00100000 : ALGEBRAIC[(offset * num_of_algebraic) + tau_relp_temp]);
@@ -839,6 +841,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + IKb] =  CONSTANTS[(offset * num_of_const
 ALGEBRAIC[(offset * num_of_algebraic) + JdiffK] = (STATES[(offset * num_of_states) + kss] - STATES[(offset * num_of_states) + ki])/2.00000;
 ALGEBRAIC[(offset * num_of_algebraic) + PhiCaK] = ( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vffrt]*( 0.750000*STATES[(offset * num_of_states) + kss]*exp( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) -  0.750000*CONSTANTS[(offset * num_of_constants) + ko]))/(exp( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) - 1.00000);
 ALGEBRAIC[(offset * num_of_algebraic) + ICaK] =  (1.00000 - ALGEBRAIC[(offset * num_of_algebraic) + fICaLp])*CONSTANTS[(offset * num_of_constants) + PCaK]*ALGEBRAIC[(offset * num_of_algebraic) + PhiCaK]*STATES[(offset * num_of_states) + d]*( ALGEBRAIC[(offset * num_of_algebraic) + f]*(1.00000 - STATES[(offset * num_of_states) + nca])+ STATES[(offset * num_of_states) + jca]*ALGEBRAIC[(offset * num_of_algebraic) + fca]*STATES[(offset * num_of_states) + nca])+ ALGEBRAIC[(offset * num_of_algebraic) + fICaLp]*CONSTANTS[(offset * num_of_constants) + PCaKp]*ALGEBRAIC[(offset * num_of_algebraic) + PhiCaK]*STATES[(offset * num_of_states) + d]*( ALGEBRAIC[(offset * num_of_algebraic) + fp]*(1.00000 - STATES[(offset * num_of_states) + nca])+ STATES[(offset * num_of_states) + jca]*ALGEBRAIC[(offset * num_of_algebraic) + fcap]*STATES[(offset * num_of_states) + nca]);
+if (offset == 1) printf("ICaK: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + ICaK]);
 ALGEBRAIC[(offset * num_of_algebraic) + ENa] =  (( CONSTANTS[(offset * num_of_constants) + R]*CONSTANTS[(offset * num_of_constants) + T])/CONSTANTS[(offset * num_of_constants) + F])*log(CONSTANTS[(offset * num_of_constants) + nao]/STATES[(offset * num_of_states) + nai]);
 ALGEBRAIC[(offset * num_of_algebraic) + h] =  CONSTANTS[(offset * num_of_constants) + Ahf]*STATES[(offset * num_of_states) + hf]+ CONSTANTS[(offset * num_of_constants) + Ahs]*STATES[(offset * num_of_states) + hs];
 ALGEBRAIC[(offset * num_of_algebraic) + hp] =  CONSTANTS[(offset * num_of_constants) + Ahf]*STATES[(offset * num_of_states) + hf]+ CONSTANTS[(offset * num_of_constants) + Ahs]*STATES[(offset * num_of_states) + hsp];
@@ -866,6 +869,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + h3_i] = 1.00000/ALGEBRAIC[(offset * num_
 ALGEBRAIC[(offset * num_of_algebraic) + k4p_i] = ( ALGEBRAIC[(offset * num_of_algebraic) +  h3_i]*CONSTANTS[(offset * num_of_constants) + wca])/ALGEBRAIC[(offset * num_of_algebraic) +  hca];
 ALGEBRAIC[(offset * num_of_algebraic) + k4_i] = ALGEBRAIC[(offset * num_of_algebraic) +  k4p_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k4pp_i];
 ALGEBRAIC[(offset * num_of_algebraic) + h6_i] = 1.00000/ALGEBRAIC[(offset * num_of_algebraic) +  h4_i];
+
 ALGEBRAIC[(offset * num_of_algebraic) + k6_i] =  ALGEBRAIC[(offset * num_of_algebraic) + h6_i]*STATES[(offset * num_of_states) + cai]*CONSTANTS[(offset * num_of_constants) + kcaon];
 ALGEBRAIC[(offset * num_of_algebraic) + x1_i] =  CONSTANTS[(offset * num_of_constants) + k2_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]*(ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k6_i])+ CONSTANTS[(offset * num_of_constants) + k5_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]*(CONSTANTS[(offset * num_of_constants) + k2_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k3_i]);
 ALGEBRAIC[(offset * num_of_algebraic) + x2_i] =  CONSTANTS[(offset * num_of_constants) + k1_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]*(ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]+CONSTANTS[(offset * num_of_constants) + k5_i])+ ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k6_i]*(CONSTANTS[(offset * num_of_constants) + k1_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k8_i]);
@@ -889,6 +893,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + k3pp_ss] =  ALGEBRAIC[(offset * num_of_a
 ALGEBRAIC[(offset * num_of_algebraic) + h1_ss] = 1.00000+ (STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna3])*(1.00000+ALGEBRAIC[(offset * num_of_algebraic) + hna]);
 ALGEBRAIC[(offset * num_of_algebraic) + h2_ss] = ( STATES[(offset * num_of_states) + nass]*ALGEBRAIC[(offset * num_of_algebraic) + hna])/( CONSTANTS[(offset * num_of_constants) + kna3]*ALGEBRAIC[(offset * num_of_algebraic) + h1_ss]);
 ALGEBRAIC[(offset * num_of_algebraic) + k4pp_ss] =  ALGEBRAIC[(offset * num_of_algebraic) + h2_ss]*CONSTANTS[(offset * num_of_constants) + wnaca];
+if (offset == 1) printf("k4pp_ss: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + k4pp_ss]);
 ALGEBRAIC[(offset * num_of_algebraic) + h4_ss] = 1.00000+ (STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna1])*(1.00000+STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna2]);
 ALGEBRAIC[(offset * num_of_algebraic) + h5_ss] = ( STATES[(offset * num_of_states) + nass]*STATES[(offset * num_of_states) + nass])/( ALGEBRAIC[(offset * num_of_algebraic) + h4_ss]*CONSTANTS[(offset * num_of_constants) + kna1]*CONSTANTS[(offset * num_of_constants) + kna2]);
 ALGEBRAIC[(offset * num_of_algebraic) + k7_ss] =  ALGEBRAIC[(offset * num_of_algebraic) + h5_ss]*ALGEBRAIC[(offset * num_of_algebraic) + h2_ss]*CONSTANTS[(offset * num_of_constants) + wna];
@@ -926,7 +931,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + Jup] = ( (1.00000 - ALGEBRAIC[(offset * 
 ALGEBRAIC[(offset * num_of_algebraic) + Bcai] = 1.00000/(1.00000+( CONSTANTS[(offset * num_of_constants) + cmdnmax]*CONSTANTS[(offset * num_of_constants) + kmcmdn])/pow(CONSTANTS[(offset * num_of_constants) + kmcmdn]+STATES[(offset * num_of_states) + cai], 2.00000)+( CONSTANTS[(offset * num_of_constants) + trpnmax]*CONSTANTS[(offset * num_of_constants) + kmtrpn])/pow(CONSTANTS[(offset * num_of_constants) + kmtrpn]+STATES[(offset * num_of_states) + cai], 2.00000));
 ALGEBRAIC[(offset * num_of_algebraic) + Jtr] = (STATES[(offset * num_of_states) + cansr] - STATES[(offset * num_of_states) + cajsr])/100.000;
 ALGEBRAIC[(offset * num_of_algebraic) + Bcajsr] = 1.00000/(1.00000+( CONSTANTS[(offset * num_of_constants) + csqnmax]*CONSTANTS[(offset * num_of_constants) + kmcsqn])/pow(CONSTANTS[(offset * num_of_constants) + kmcsqn]+STATES[(offset * num_of_states) + cajsr], 2.00000));
-
+if (offset == 1) printf("Bcajsr: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + Bcajsr]);
 RATES[(offset * num_of_rates) + hL] = (ALGEBRAIC[(offset * num_of_algebraic) + hLss] - STATES[(offset * num_of_states) + hL])/CONSTANTS[(offset * num_of_constants) + thL];
 RATES[(offset * num_of_rates) + hLp] = (ALGEBRAIC[(offset * num_of_algebraic) + hLssp] - STATES[(offset * num_of_states) + hLp])/CONSTANTS[(offset * num_of_constants) + thLp];
 RATES[(offset * num_of_rates) + m] = (ALGEBRAIC[(offset * num_of_algebraic) + mss] - STATES[(offset * num_of_states) + m])/ALGEBRAIC[(offset * num_of_algebraic) + tm];
