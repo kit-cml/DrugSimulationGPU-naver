@@ -1,16 +1,3 @@
-## Makefile for C++ project using Boost
-#
-# @author Cedric "levif" Le Dillau
-# @modified Aroli Marcellinus 
-#
-# Some notes:
-# - Using ':=' instead of '=' assign the value at Makefile parsing time,
-#   others are evaluated at usage time. This discards
-# - Use ':set list' in Vi/Vim to show tabs (Ctrl-v-i force tab insertion)
-#
-
-# List to '.PHONY' all fake targets, those that are neither files nor folders.
-# "all" and "clean" are good candidates.
 .PHONY: all, clean
 
 # Define the final program name

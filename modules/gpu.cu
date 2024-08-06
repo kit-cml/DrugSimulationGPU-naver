@@ -154,7 +154,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
     int pace_count = 0;
     if(sample_id == 1) printf("tmax : %lf\n",tmax);
 
-    while (int(tcurr[sample_id])<int(tmax))
+    while (tcurr[sample_id]<tmax)
     {
         if(sample_id == 1) printf("tmax : %lf tcurr: %lf \n",tmax, tcurr[sample_id]);
         if(sample_id == 1) printf("%lf,%lf,%lf,%lf\n", dt[sample_id], tcurr[sample_id], d_STATES[V + (sample_id * num_of_states)],d_RATES[V + (sample_id * num_of_rates)]);
@@ -257,7 +257,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
         }
         
 
-        solveAnalytical(d_CONSTANTS, d_STATES, d_ALGEBRAIC, d_RATES,  dt[sample_id], sample_id);
+        solveAnalytical(d_CONSTANTS, d_STATES, d_ALGEBRAIC, d_RATES,  dt[sample_id], sample_id); // -> check this
         // tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
         // __syncthreads();
         if(sample_id == 1) printf("solved analytical\n"); 
