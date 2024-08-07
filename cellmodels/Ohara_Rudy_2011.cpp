@@ -712,6 +712,7 @@ __device__ void initConsts(double *CONSTANTS, double *STATES, double type, doubl
 
 __device__ void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, int offset )
 {
+if (offset == 1) printf("inside computeRates\n");
 int num_of_constants = 146; //done
 int num_of_states = 41; //done
 int num_of_algebraic = 199; //done
@@ -1030,6 +1031,7 @@ __device__ void solveAnalytical(double *CONSTANTS, double *STATES, double *ALGEB
   STATES[(offset * num_of_states) + hL] = ALGEBRAIC[(offset * num_of_algebraic) + hLss] - (ALGEBRAIC[(offset * num_of_algebraic) + hLss] - STATES[(offset * num_of_states) + hL]) * exp(-dt / CONSTANTS[(offset * num_of_constants) + thL]);
   STATES[(offset * num_of_states) + hLp] = ALGEBRAIC[(offset * num_of_algebraic) + hLssp] - (ALGEBRAIC[(offset * num_of_algebraic) + hLssp] - STATES[(offset * num_of_states) + hLp]) * exp(-dt / CONSTANTS[(offset * num_of_constants) + thLp]);
   ////Ito
+  if (offset == 1) printf("hLp: %lf\n", STATES[(offset * num_of_states) + hLp]);
   STATES[(offset * num_of_states) + a] = ALGEBRAIC[(offset * num_of_algebraic) + ass] - (ALGEBRAIC[(offset * num_of_algebraic) + ass] - STATES[(offset * num_of_states) + a]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + ta]);
   STATES[(offset * num_of_states) + iF] = ALGEBRAIC[(offset * num_of_algebraic) + iss] - (ALGEBRAIC[(offset * num_of_algebraic) + iss] - STATES[(offset * num_of_states) + iF]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tiF]);
   STATES[(offset * num_of_states) + iS] = ALGEBRAIC[(offset * num_of_algebraic) + iss] - (ALGEBRAIC[(offset * num_of_algebraic) + iss] - STATES[(offset * num_of_states) + iS]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tiS]);
@@ -1086,7 +1088,7 @@ __device__ void solveAnalytical(double *CONSTANTS, double *STATES, double *ALGEB
   STATES[(offset * num_of_states) + cass] = STATES[(offset * num_of_states) + cass] + RATES[(offset * num_of_rates) + cass] * dt;
   STATES[(offset * num_of_states) + cansr] = STATES[(offset * num_of_states) + cansr] + RATES[(offset * num_of_rates) + cansr] * dt;
   STATES[(offset * num_of_states) + cajsr] = STATES[(offset * num_of_states) + cajsr] + RATES[(offset * num_of_rates) + cajsr] * dt; 
-  if (offset == 1) printf("cajsr: %lf\n", STATES[(offset * num_of_states) + cajsr]);
+  
 // #endif
 }
 

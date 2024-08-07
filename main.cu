@@ -228,8 +228,7 @@ int check_IC50_content(const drug_t* ic50, const param_t* p_param)
 
 int main(int argc, char **argv)
 {
-	// enable real-time output in stdout
-	//setvbuf( stdout, NULL, _IONBF, 0 );
+	const int gpu_spec = 256;
 	
 // NEW CODE STARTS HERE //
     // mycuda *thread_id;
@@ -374,7 +373,7 @@ int main(int argc, char **argv)
     tic();
     printf("Timer started, doing simulation.... \n\n\nGPU Usage at this moment: \n");
     int thread;
-    if (sample_size>=256) thread = 256;// optimal number of thread by experience -> might be different for each GPU, can be 16, can be 32
+    if (sample_size>=gpu_spec) thread = gpu_spec;// optimal number of thread by experience -> might be different for each GPU, can be 16, can be 32
     else thread = sample_size;
     // int block = int(ceil(sample_size*1.0/thread)+1);
     int block = (sample_size + thread - 1) / thread;
@@ -598,6 +597,7 @@ int main(int argc, char **argv)
 
     ////////// find cache mode (in silico code) //////////
     else{
+
     printf("In-silico mode, creating cache file because we don't have that yet, or is_time_series is intentionally false \n\n");
     double *d_ic50;
     double *d_cvar;
@@ -677,8 +677,8 @@ int main(int argc, char **argv)
     tic();
     printf("Timer started, doing simulation.... \n GPU Usage at this moment: \n");
     int thread;
-    if (sample_size>=256){
-      thread = 256;
+    if (sample_size>=gpu_spec){
+      thread = gpu_spec;
     }
     else thread = sample_size;
     // int block = int(ceil(sample_size*1.0/thread)+1);
@@ -708,7 +708,7 @@ int main(int argc, char **argv)
                                       //block per grid, threads per block
     // endwin();
     
-    cudaDeviceSynchronize();
+    // cudaDeviceSynchronize();
     
 
     printf("allocating memory for computation result in the CPU, malloc style \n");
