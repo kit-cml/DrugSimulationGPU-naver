@@ -152,25 +152,20 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
     tmax = pace_max * bcl;
     int pace_count = 0;
-    if(sample_id == 1) printf("tmax : %lf\n",tmax);
 
     while (tcurr[sample_id]<tmax)
     {
-        if(sample_id == 1) printf("tmax : %lf tcurr: %lf \n",tmax, tcurr[sample_id]);
-        if(sample_id == 1) printf("%lf,%lf,%lf,%lf\n", dt[sample_id], tcurr[sample_id], d_STATES[V + (sample_id * num_of_states)],d_RATES[V + (sample_id * num_of_rates)]);
         computeRates(tcurr[sample_id], d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
-        if(sample_id == 1) printf("%d \n",pace_count);
         dt_set = set_time_step( tcurr[sample_id], time_point, max_time_step, d_CONSTANTS, d_RATES, d_STATES, d_ALGEBRAIC, sample_id); 
         
         //  printf("tcurr at core %d: %lf\n",sample_id,tcurr[sample_id]);
-        if(sample_id == 1) printf("if %d == %d\n",floor((tcurr[sample_id] + dt_set) / bcl), floor(tcurr[sample_id] / bcl));
+        // if(sample_id == 1) printf("if %d == %d\n",floor((tcurr[sample_id] + dt_set) / bcl), floor(tcurr[sample_id] / bcl));
+
         if (floor((tcurr[sample_id] + dt_set) / bcl) == floor(tcurr[sample_id] / bcl)) { 
           dt[sample_id] = dt_set;
-          if(sample_id == 1) printf("dt : %lf\n",dt_set);
           // it goes in here, but it does not, you know, adds the pace, 
         }
         else{
-          if(sample_id == 1) printf("Else...\n");
             dt[sample_id] = (floor(tcurr[sample_id] / bcl) + 1) * bcl - tcurr[sample_id];
             temp_result[sample_id].cad50 = cad50_curr - cad50_prev;
             temp_result[sample_id].cad90 = cad90_curr - cad90_prev;
@@ -179,7 +174,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
             temp_result[sample_id].ical_auc = ical_auc;
             temp_result[sample_id].vm_dia = d_STATES[(sample_id * num_of_states) +V];
             temp_result[sample_id].ca_dia = d_STATES[(sample_id * num_of_states) +cai];
-            printf("cad50 updated:  %lf\n",temp_result[sample_id].cad50);
+            // printf("cad50 updated:  %lf\n",temp_result[sample_id].cad50);
 
             // fprintf(fp_vmdebug, "%hu,%.2lf,%.2lf,%.2lf,%.2lf,%.2lf,%.2lf\n", pace_count,t_peak_capture,temp_result.vm_peak,vm_repol30,vm_repol50,vm_repol90,temp_result.dvmdt_repol);
             // replace result with steeper repolarization AP or first pace from the last 250 paces
@@ -189,7 +184,6 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
             //   }
             if( temp_result[sample_id].dvmdt_repol > cipa_result[sample_id].dvmdt_repol ) {
               pace_steepest = pace_count;
-              printf("Steepest pace updated: %d dvmdt_repol: %lf\n",pace_steepest,temp_result[sample_id].dvmdt_repol);
 
               // cipa_result = temp_result;
               cipa_result[sample_id].qnet = temp_result[sample_id].qnet;
@@ -249,7 +243,7 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
               
           is_eligible_AP = false;
           // new part ends
-           if(sample_id == 1000 || sample_id == 2000 || sample_id == 3000 || sample_id == 4000 || sample_id == 5000 || sample_id == 6000 || sample_id == 7000 || sample_id == 8000 || sample_id == 9000 ){
+           if(sample_id == 0 || sample_id == 1000 || sample_id == 2000 || sample_id == 3000 || sample_id == 4000 || sample_id == 5000 || sample_id == 6000 || sample_id == 7000 || sample_id == 8000 || sample_id == 9000 ){
             printf("core: %d pace count: %d t: %lf, steepest: %d, dvmdt_repol: %lf\n",sample_id,pace_count, tcurr[sample_id], pace_steepest, cipa_result[sample_id].dvmdt_repol);
           }
           // printf("core: %d pace count: %d t: %lf, steepest: %d, dvmdt_repol: %lf, t_peak: %lf\n",sample_id,pace_count, tcurr[sample_id], pace_steepest, cipa_result[sample_id].dvmdt_repol,t_peak_capture);
@@ -259,12 +253,9 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
         solveAnalytical(d_CONSTANTS, d_STATES, d_ALGEBRAIC, d_RATES,  dt[sample_id], sample_id); // -> check this
         // tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
-        // __syncthreads();
-        if(sample_id == 1) printf("solved analytical\n"); 
         // it goes here, so it means, basically, floor((tcurr[sample_id] + dt_set) / bcl) == floor(tcurr[sample_id] / bcl) is always true
 
-        // begin the last 250 pace operations
-        if(sample_id == 1) printf("paces: %d from %d\n\n", pace_count,last_drug_check_pace);
+        // begin the last 250 pace operation
         if (pace_count >= pace_max-last_drug_check_pace)
         {
           printf("last 250 ops, pace: %d\n", pace_count);
@@ -402,7 +393,6 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
 
 		    } // end the last 250 pace operations
         tcurr[sample_id] = tcurr[sample_id] + dt[sample_id];
-       if(sample_id == 1) printf("t after addition: %lf\n\n", tcurr[sample_id]);
     } // while loop ends here 
     // __syncthreads();
 }

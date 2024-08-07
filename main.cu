@@ -228,7 +228,7 @@ int check_IC50_content(const drug_t* ic50, const param_t* p_param)
 
 int main(int argc, char **argv)
 {
-	  const int gpu_spec = 256;
+	  const int gpu_spec = 200;
     // for qinwards calculation
     double inal_auc_control = -90.547322;    // AUC of INaL under control model
     double ical_auc_control = -105.935067;   // AUC of ICaL under control model

@@ -712,7 +712,6 @@ __device__ void initConsts(double *CONSTANTS, double *STATES, double type, doubl
 
 __device__ void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, int offset )
 {
-if (offset == 1) printf("inside computeRates\n");
 int num_of_constants = 146; //done
 int num_of_states = 41; //done
 int num_of_algebraic = 199; //done
@@ -859,7 +858,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + h3_i] = 1.00000/ALGEBRAIC[(offset * num_
 ALGEBRAIC[(offset * num_of_algebraic) + k4p_i] = ( ALGEBRAIC[(offset * num_of_algebraic) +  h3_i]*CONSTANTS[(offset * num_of_constants) + wca])/ALGEBRAIC[(offset * num_of_algebraic) +  hca];
 ALGEBRAIC[(offset * num_of_algebraic) + k4_i] = ALGEBRAIC[(offset * num_of_algebraic) +  k4p_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k4pp_i];
 ALGEBRAIC[(offset * num_of_algebraic) + h6_i] = 1.00000/ALGEBRAIC[(offset * num_of_algebraic) +  h4_i];
-if (offset == 1) printf("h6_i: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + h6_i]);
+
 ALGEBRAIC[(offset * num_of_algebraic) + k6_i] =  ALGEBRAIC[(offset * num_of_algebraic) + h6_i]*STATES[(offset * num_of_states) + cai]*CONSTANTS[(offset * num_of_constants) + kcaon];
 ALGEBRAIC[(offset * num_of_algebraic) + x1_i] =  CONSTANTS[(offset * num_of_constants) + k2_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]*(ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k6_i])+ CONSTANTS[(offset * num_of_constants) + k5_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]*(CONSTANTS[(offset * num_of_constants) + k2_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k3_i]);
 ALGEBRAIC[(offset * num_of_algebraic) + x2_i] =  CONSTANTS[(offset * num_of_constants) + k1_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k7_i]*(ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]+CONSTANTS[(offset * num_of_constants) + k5_i])+ ALGEBRAIC[(offset * num_of_algebraic) +  k4_i]*ALGEBRAIC[(offset * num_of_algebraic) +  k6_i]*(CONSTANTS[(offset * num_of_constants) + k1_i]+ALGEBRAIC[(offset * num_of_algebraic) +  k8_i]);
@@ -872,7 +871,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + E4_i] = ALGEBRAIC[(offset * num_of_algeb
 ALGEBRAIC[(offset * num_of_algebraic) + JncxNa_i] = ( 3.00000*( ALGEBRAIC[(offset * num_of_algebraic) + E4_i]*ALGEBRAIC[(offset * num_of_algebraic) + k7_i] -  ALGEBRAIC[(offset * num_of_algebraic) + E1_i]*ALGEBRAIC[(offset * num_of_algebraic) + k8_i])+ ALGEBRAIC[(offset * num_of_algebraic) + E3_i]*ALGEBRAIC[(offset * num_of_algebraic) + k4pp_i]) -  ALGEBRAIC[(offset * num_of_algebraic) + E2_i]*ALGEBRAIC[(offset * num_of_algebraic) + k3pp_i];
 ALGEBRAIC[(offset * num_of_algebraic) + JncxCa_i] =  ALGEBRAIC[(offset * num_of_algebraic) + E2_i]*CONSTANTS[(offset * num_of_constants) + k2_i] -  ALGEBRAIC[(offset * num_of_algebraic) + E1_i]*CONSTANTS[(offset * num_of_constants) + k1_i];
 ALGEBRAIC[(offset * num_of_algebraic) + INaCa_i] =  0.800000*CONSTANTS[(offset * num_of_constants) + Gncx]*ALGEBRAIC[(offset * num_of_algebraic) + allo_i]*( CONSTANTS[(offset * num_of_constants) + zna]*ALGEBRAIC[(offset * num_of_algebraic) + JncxNa_i]+ CONSTANTS[(offset * num_of_constants) + zca]*ALGEBRAIC[(offset * num_of_algebraic) + JncxCa_i]);
-if (offset == 1) printf("INaCa_i: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + INaCa_i]);
+
 ALGEBRAIC[(offset * num_of_algebraic) + INab] = ( CONSTANTS[(offset * num_of_constants) + PNab]*ALGEBRAIC[(offset * num_of_algebraic) + vffrt]*( STATES[(offset * num_of_states) + nai]*exp(ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) - CONSTANTS[(offset * num_of_constants) + nao]))/(exp(ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) - 1.00000);
 ALGEBRAIC[(offset * num_of_algebraic) + JdiffNa] = (STATES[(offset * num_of_states) + nass] - STATES[(offset * num_of_states) + nai])/2.00000;
 ALGEBRAIC[(offset * num_of_algebraic) + PhiCaNa] = ( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vffrt]*( 0.750000*STATES[(offset * num_of_states) + nass]*exp( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) -  0.750000*CONSTANTS[(offset * num_of_constants) + nao]))/(exp( 1.00000*ALGEBRAIC[(offset * num_of_algebraic) + vfrt]) - 1.00000);
@@ -884,7 +883,7 @@ ALGEBRAIC[(offset * num_of_algebraic) + k3pp_ss] =  ALGEBRAIC[(offset * num_of_a
 ALGEBRAIC[(offset * num_of_algebraic) + h1_ss] = 1.00000+ (STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna3])*(1.00000+ALGEBRAIC[(offset * num_of_algebraic) + hna]);
 ALGEBRAIC[(offset * num_of_algebraic) + h2_ss] = ( STATES[(offset * num_of_states) + nass]*ALGEBRAIC[(offset * num_of_algebraic) + hna])/( CONSTANTS[(offset * num_of_constants) + kna3]*ALGEBRAIC[(offset * num_of_algebraic) + h1_ss]);
 ALGEBRAIC[(offset * num_of_algebraic) + k4pp_ss] =  ALGEBRAIC[(offset * num_of_algebraic) + h2_ss]*CONSTANTS[(offset * num_of_constants) + wnaca];
-if (offset == 1) printf("k4pp_ss: %lf\n", ALGEBRAIC[(offset * num_of_algebraic) + k4pp_ss]);
+
 ALGEBRAIC[(offset * num_of_algebraic) + h4_ss] = 1.00000+ (STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna1])*(1.00000+STATES[(offset * num_of_states) + nass]/CONSTANTS[(offset * num_of_constants) + kna2]);
 ALGEBRAIC[(offset * num_of_algebraic) + h5_ss] = ( STATES[(offset * num_of_states) + nass]*STATES[(offset * num_of_states) + nass])/( ALGEBRAIC[(offset * num_of_algebraic) + h4_ss]*CONSTANTS[(offset * num_of_constants) + kna1]*CONSTANTS[(offset * num_of_constants) + kna2]);
 ALGEBRAIC[(offset * num_of_algebraic) + k7_ss] =  ALGEBRAIC[(offset * num_of_algebraic) + h5_ss]*ALGEBRAIC[(offset * num_of_algebraic) + h2_ss]*CONSTANTS[(offset * num_of_constants) + wna];
@@ -1021,7 +1020,7 @@ __device__ void solveAnalytical(double *CONSTANTS, double *STATES, double *ALGEB
   ////==============
   ////INa
   STATES[(offset * num_of_states) + m] = ALGEBRAIC[(offset * num_of_algebraic) + mss] - (ALGEBRAIC[(offset * num_of_algebraic) + mss] - STATES[(offset * num_of_states) + m]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tm]);
-  if (offset == 1) printf("m: %lf\n", STATES[(offset * num_of_states) + m]);
+  
   STATES[(offset * num_of_states) + hf] = ALGEBRAIC[(offset * num_of_algebraic) + hss] - (ALGEBRAIC[(offset * num_of_algebraic) + hss] - STATES[(offset * num_of_states) + hf]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + thf]);
   STATES[(offset * num_of_states) + hs] = ALGEBRAIC[(offset * num_of_algebraic) + hss] - (ALGEBRAIC[(offset * num_of_algebraic) + hss] - STATES[(offset * num_of_states) + hs]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + ths]);
   STATES[(offset * num_of_states) + j] = ALGEBRAIC[(offset * num_of_algebraic) + jss] - (ALGEBRAIC[(offset * num_of_algebraic) + jss] - STATES[(offset * num_of_states) + j]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tj]);
@@ -1031,7 +1030,7 @@ __device__ void solveAnalytical(double *CONSTANTS, double *STATES, double *ALGEB
   STATES[(offset * num_of_states) + hL] = ALGEBRAIC[(offset * num_of_algebraic) + hLss] - (ALGEBRAIC[(offset * num_of_algebraic) + hLss] - STATES[(offset * num_of_states) + hL]) * exp(-dt / CONSTANTS[(offset * num_of_constants) + thL]);
   STATES[(offset * num_of_states) + hLp] = ALGEBRAIC[(offset * num_of_algebraic) + hLssp] - (ALGEBRAIC[(offset * num_of_algebraic) + hLssp] - STATES[(offset * num_of_states) + hLp]) * exp(-dt / CONSTANTS[(offset * num_of_constants) + thLp]);
   ////Ito
-  if (offset == 1) printf("hLp: %lf\n", STATES[(offset * num_of_states) + hLp]);
+  
   STATES[(offset * num_of_states) + a] = ALGEBRAIC[(offset * num_of_algebraic) + ass] - (ALGEBRAIC[(offset * num_of_algebraic) + ass] - STATES[(offset * num_of_states) + a]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + ta]);
   STATES[(offset * num_of_states) + iF] = ALGEBRAIC[(offset * num_of_algebraic) + iss] - (ALGEBRAIC[(offset * num_of_algebraic) + iss] - STATES[(offset * num_of_states) + iF]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tiF]);
   STATES[(offset * num_of_states) + iS] = ALGEBRAIC[(offset * num_of_algebraic) + iss] - (ALGEBRAIC[(offset * num_of_algebraic) + iss] - STATES[(offset * num_of_states) + iS]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tiS]);
@@ -1040,7 +1039,7 @@ __device__ void solveAnalytical(double *CONSTANTS, double *STATES, double *ALGEB
   STATES[(offset * num_of_states) + iSp] = ALGEBRAIC[(offset * num_of_algebraic) + iss] - (ALGEBRAIC[(offset * num_of_algebraic) + iss] - STATES[(offset * num_of_states) + iSp]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tiSp]);
   ////ICaL
   STATES[(offset * num_of_states) + d] = ALGEBRAIC[(offset * num_of_algebraic) + dss] - (ALGEBRAIC[(offset * num_of_algebraic) + dss] - STATES[(offset * num_of_states) + d]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + td]);
-  if (offset == 1) printf("d: %lf\n", STATES[(offset * num_of_states) + d]);
+  
   STATES[(offset * num_of_states) + ff] = ALGEBRAIC[(offset * num_of_algebraic) + fss] - (ALGEBRAIC[(offset * num_of_algebraic) + fss] - STATES[(offset * num_of_states) + ff]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tff]);
   STATES[(offset * num_of_states) + fs] = ALGEBRAIC[(offset * num_of_algebraic) + fss] - (ALGEBRAIC[(offset * num_of_algebraic) + fss] - STATES[(offset * num_of_states) + fs]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tfs]);
   STATES[(offset * num_of_states) + fcaf] = ALGEBRAIC[(offset * num_of_algebraic) + fcass] - (ALGEBRAIC[(offset * num_of_algebraic) + fcass] - STATES[(offset * num_of_states) + fcaf]) * exp(-dt / ALGEBRAIC[(offset * num_of_algebraic) + tfcaf]);
