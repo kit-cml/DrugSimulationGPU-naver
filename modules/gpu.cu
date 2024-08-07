@@ -258,7 +258,8 @@ __device__ void kernel_DoDrugSim(double *d_ic50, double *d_cvar, double *d_CONST
         // begin the last 250 pace operation
         if (pace_count >= pace_max-last_drug_check_pace)
         {
-          printf("last 250 ops, pace: %d\n", pace_count);
+          // printf("last 250 ops, pace: %d\n", pace_count);
+          
 			    // Find peak vm around 2 msecs and  40 msecs after stimulation
 			    // and when the sodium current reach 0
           // new codes start here
