@@ -13,12 +13,12 @@ echo "run in-silico"
 
 "./drug_sim" -input_deck ./input_deck.txt -hill_file ./drugs/$drugname/IC50_samples10k.csv
 
-# echo "---------------------"
-# echo "run post-processing"
+echo "---------------------"
+echo "run post-processing"
 
-# new_value="1"
-# sed -i.old "s/^\(Is_Post_Processing = \).*/\1$new_value/" "./input_deck.txt"
+new_value="1"
+sed -i.old "s/^\(Is_Post_Processing = \).*/\1$new_value/" "./input_deck.txt"
 
-# "./drug_sim" -input_deck ./input_deck.txt -hill_file ./drugs/$drugname/IC50_samples224k.csv -init_file ./result/$formatted_concentration.csv
-# new_value="0"
-# sed -i.old "s/^\(Is_Post_Processing = \).*/\1$new_value/" "./input_deck.txt"
+"./drug_sim" -input_deck ./input_deck.txt -hill_file ./drugs/$drugname/IC50_samples10k.csv -init_file ./result/$formatted_concentration.csv
+new_value="0"
+sed -i.old "s/^\(Is_Post_Processing = \).*/\1$new_value/" "./input_deck.txt"
