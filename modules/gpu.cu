@@ -916,8 +916,14 @@ __global__ void kernel_DrugSimulation(double *d_ic50, double *d_cvar, double *d_
   {
     unsigned short thread_id;
     thread_id = blockIdx.x * blockDim.x + threadIdx.x;
-    double time_for_each_sample[10000];
-    double dt_for_each_sample[10000];
+    double time_for_each_sample[100000];
+    // double *time_for_each_sample;
+    // cudaMalloc(&time_for_each_sample, 224000 * sizeof(double));
+
+    double dt_for_each_sample[100000];
+    // double *dt_for_each_sample;
+    // cudaMalloc(&dt_for_each_sample, 224000 * sizeof(double));
+
     // cipa_t temp_per_sample[2000];
     // cipa_t cipa_per_sample[2000];
     // printf("in\n");
